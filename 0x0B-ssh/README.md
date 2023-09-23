@@ -20,9 +20,9 @@ server using the private key ~/.ssh/school with the user ubuntu
 
 * [2-ssh_config](./2-ssh_config): SSH configuration file configured to use the private key
 `~/.ssh/school` and to refuse authentication using a password.
-- SSH client configuration must be configured to use the private key ~/.ssh/school
-- SSH client configuration must be configured to refuse to authenticate using a password
+	- SSH client configuration must be configured to use the private key ~/.ssh/school
+	- SSH client configuration must be configured to refuse to authenticate using a password
 
 * [100-puppet_ssh_config.pp](./100-puppet_ssh_config.pp): Puppet manifest that makes changes to our configuration file
-- Your SSH client configuration must be configured to use the private key ~/.ssh/school
-- Your SSH client configuration must be configured to refuse to authenticate using a password
+	- Your SSH client configuration must be configured to use the private key ~/.ssh/school
+	- Your SSH client configuration must be configured to refuse to authenticate using a password
