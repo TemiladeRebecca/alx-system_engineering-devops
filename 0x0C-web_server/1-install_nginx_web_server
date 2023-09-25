@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Installs Nginx web server with configure it:
+#  Listens on port 80.
+#  Returns a page containing "Hello World" when queried
+
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+# is used to allow incoming connections to the Nginx HTTP server through the firewall through port 80. using the ufw (Uncomplicated Firewall) command-line tool.
+sudo ufw allow 'Nginx HTTP'
+
+# set up a page containing "Hello World" when queried at the root with a curl GET request.
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# testing nginx configuration
+Sudo nginx -t
+
+# restart Nginx to apply the changes
+service nginx reload
