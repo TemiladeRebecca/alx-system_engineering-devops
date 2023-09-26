@@ -10,10 +10,17 @@ apt-get -y install nginx
 # is used to allow incoming connections to the Nginx HTTP server through the firewall through port 80. using the ufw (Uncomplicated Firewall) command-line tool.
 sudo ufw allow 'Nginx HTTP'
 
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# change the owner of the /var/www directory to the current user recursively. To allow modification of the files in the directory.
+sudo chown -R $USER /var/www
 
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/TemiladeRebecca permanent;"
+# set up a page containing "Hello World" when queried at the root with a curl GET request.
+echo 'Hello World!' | sudo tee /var/www/html/index..html
 
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+sudo chown -R $USER /etc/nginx/sites-available/default
 
-sudo server nginx restart
+# Making a backup of the default file, in case something goes wrong
+sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
+
+sudo sed -i '24i\rewrite ^/redirect_me https://github/TemiladeRebecca permanent;' /etc/nginx/sites-enabled/default
+
+service nginx restart
