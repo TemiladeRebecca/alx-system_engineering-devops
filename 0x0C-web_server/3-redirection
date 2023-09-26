@@ -10,19 +10,11 @@ apt-get -y install nginx
 # is used to allow incoming connections to the Nginx HTTP server through the firewall through port 80. using the ufw (Uncomplicated Firewall) command-line tool.
 sudo ufw allow 'Nginx HTTP'
 
-# change the owner of the /var/www directory to the current user recursively. To allow modification of the files in the directory.
-sudo chown -R $USER /var/www
-
 # set up a page containing "Hello World" when queried at the root with a curl GET request.
-echo 'Hello World!' > /var/www/html/index.nginx-debian.html
+echo 'Hello World!' > /var/www/html/index.html
 
-# change the owner of the /etc/nginx/sites-available/defaul/etc/nginx/sites-available/default,to enable modification of the config file.
-sudo chown -R $USER /etc/nginx/sites-available/default
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/TemiladeRebecca permanent;"
 
-# Making a backup of the default file, in case something goes wrong
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-# Setting up /redirect_me to a permanent redirect to https://twitter.com/ai_optimizer
-sudo sed -i '24i\rewrite ^/redirect_me https://twitter.com/ai_optimizer permanent;' /etc/nginx/sites-available/default
-
-service nginx restart
+sudo server nginx restart
