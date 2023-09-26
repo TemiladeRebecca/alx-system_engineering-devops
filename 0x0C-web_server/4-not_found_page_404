@@ -7,10 +7,21 @@
 apt-get -y update
 apt-get -y install nginx
 
+# is used to allow incoming connections to the Nginx HTTP server through the firewall through port 80. using the ufw (Uncomplicated Firewall) command-line tool.
+sudo ufw allow 'Nginx HTTP'
+
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/TemiladeRebecca permanent;"
 
 sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-sudo service nginx restart
+#creating 404 error code
+echo “Ceci n’est pas une page” | sudo tee /var/www/html/404.html
+
+string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+ 
+sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+#restart nginx after implementing changes
+sudo server nginx restart
