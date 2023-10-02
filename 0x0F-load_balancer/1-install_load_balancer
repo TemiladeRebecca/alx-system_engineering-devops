@@ -1,0 +1,23 @@
+service nginx restart
+
+#!/usr/bin/env bash
+# configures a new HAproxy as a load balancer
+
+# Install HAproxy on a server
+sudo apt-get -y update
+sudo apt-get install -y haproxy
+
+# Configure HAProxy
+echo '
+frontend www-http
+        bind *:80
+        mode http
+        default_backend www-backend
+backend www-backend
+        balance roundrobin
+        server 300054-web-01 54.90.40.168:80 check
+        server 300054-web-02 100.26.234.58:80 check
+' >> /etc/haproxy/haproxy.cfg
+
+# Restart HAproxy service
+sudo service haproxy restart
