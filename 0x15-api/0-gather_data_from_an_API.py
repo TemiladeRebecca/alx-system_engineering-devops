@@ -5,18 +5,27 @@ return information about the employee's todo list progress
 """
 
 import requests
-from sys import argv
+import sys
+
 
 if __name__ == '__main__':
-    userId = argv[1]
-    user = requests.get("https://jsonplaceholder.typicode.com/users/{}".
-                        format(userId), verify=False).json()
-    todo = requests.get("https://jsonplaceholder.typicode.com/todos?userId={}".
-                        format(userId), verify=False).json()
-    completed_tasks = []
-    for task in todo:
-        if task.get('completed') is True:
-            completed_tasks.append(task.get('title'))
+    employee_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/users/"
+    employee_url = url + employee_id
+    todo_url = url + "todo"
+
+    employee_response = requests.get(employee_url).json()
+    todo_response = requests.get(todo_url).json()
+    employee_name = employee_response.get("name")
+    total = len(todo_response)
+    done = 0
+    for i in todo_response:
+        if i.get("completed"):
+            done += 1
     print("Employee {} is done with tasks({}/{}):".
-          format(user.get('name'), len(completed_tasks), len(todo)))
-    print("\n".join("\t {}".format(task) for task in completed_tasks))
+          format(employee_name, done, total))
+
+    for todo in todo_response:
+        if todo.get("completed"):
+            title = todo.get("title")
+            print("\t {}".format(title))
