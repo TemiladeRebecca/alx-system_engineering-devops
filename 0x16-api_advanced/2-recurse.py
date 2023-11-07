@@ -1,30 +1,43 @@
 #!/usr/bin/python3
-"""Function to query a list of all hot posts on a given Reddit subreddit."""
+"""
+returna a list containing the title of all hot articles for a
+given subreddit
+"""
 import requests
 
 
-def recurse(subreddit, hot_list=[], after="", count=0):
-    """Returns a list of titles of all hot posts on a given subreddit."""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    headers = {
-        "User-Agent": "0x16.api.advanced.project by /u/chesahkalu"
-    }
-    params = {
-        "after": after,
-        "count": count,
-        "limit": 100
-    }
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-    if response.status_code == 200:
+def recurse(subreddit, hot_list=[], next_page=None, count=0):
+    """
+    subreddit = subreddit you want to query
+    host_list = a list that will store the titles of hot posts
+    next_page = A token used for pagination to retrieve the nxt page of rslts
+    Initially when you make the first request to the API
+    next_page is set to None because you are fetching the 1st page of results
+    count = A counter to keep track of the no. of posts processed
+    after and the next_page holds the same value
+    """
+    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+
+    if next_page:
+        url += '?after={}'.format(next_page)
+    headers = {'User-Agent': 'Reggy'}
+
+    r = requests.get(url, headers=headers, allow_redirects=False)
+
+    if r.status_code != 200:
         return None
 
-    results = response.json().get("data")
-    after = results.get("after")
-    count += results.get("dist")
-    for c in results.get("children"):
-        hot_list.append(c.get("data").get("title"))
+    # python dict from json object
+    data = r.json()['data']
 
-    if after is not None:
-        return recurse(subreddit, hot_list, after, count)
-    return hot_list
+    # get lists of pages
+    posts = data['children']
+    for post in posts:
+        count = count + 1
+        hot_list.append(post['data']['title'])
+
+    next_page = data['after']
+    if next_page is not None:
+        return recurse(subreddit, hot_list, next_page, count)
+    else:
+        return hot_list
