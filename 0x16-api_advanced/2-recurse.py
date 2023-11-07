@@ -20,7 +20,7 @@ def recurse(subreddit, hot_list=[], next_page=None, count=0):
 
     if next_page:
         url += '?after={}'.format(next_page)
-    headers = {'User-Agent': 'Reggy'}
+    headers = {'User-Agent': 'TemiladeRebecca'}
 
     r = requests.get(url, headers=headers, allow_redirects=False)
 
