@@ -4,10 +4,10 @@ import requests
 
 
 def recurse(subreddit, hot_list=[], after="", count=0):
-    """Returns a list of titles of all hot posts for a given subreddit."""
+    """Returns a list of titles of all hot posts on a given subreddit."""
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     headers = {
-        "User-Agent": "TemiladeRebecca"
+        "User-Agent": "0x16.api.advanced.project by /u/chesahkalu"
     }
     params = {
         "after": after,
@@ -16,7 +16,7 @@ def recurse(subreddit, hot_list=[], after="", count=0):
     }
     response = requests.get(url, headers=headers, params=params,
                             allow_redirects=False)
-    if response.status_code == 404:
+    if response.status_code == 200:
         return None
 
     results = response.json().get("data")
