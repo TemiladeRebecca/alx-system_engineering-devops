@@ -8,18 +8,18 @@ import requests
 
 def top_ten(subreddit):
     """Top 10 hot posts in using Reddit API"""
-    res = requests.request(
+    response = requests.request(
         'GET',
         'https://www.reddit.com/r/{}/hot.json?limit=10'.format(subreddit),
         headers={
-            'User-Agent': 'Reggy'
+            'User-Agent': 'TemiladeRebecca'
         },
         allow_redirects=False
     )
 
-    if res.status_code == 200:
+    if response.status_code == 200:
         try:
-            posts = res.json().get('data').get('children')
+            posts = response.json().get('data').get('children')
 
             [print(post.get('data').get('title')) for post in posts]
         except Exception:
