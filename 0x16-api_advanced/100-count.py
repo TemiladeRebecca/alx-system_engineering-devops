@@ -13,24 +13,24 @@ def count_words(subreddit, word_list, new_after='',
     word_list = map(lambda x: x.lower(), word_list)
     word_list = list(word_list)
 
-    res = requests.get("https://www.reddit.com/r/{}/hot.json"
+    response = requests.get("https://www.reddit.com/r/{}/hot.json"
                        .format(subreddit),
                        headers={'User-Agent': 'Custom'},
                        params={'after': new_after},
                        allow_redirects=False)
 
-    if res.status_code != 200:
+    if response.status_code != 200:
         return
 
     try:
-        response = res.json().get('data', None)
+        data_response = response.json().get('data', None)
 
-        if response is None:
+        if data_response is None:
             return
     except ValueError:
         return
 
-    children = response.get('children', [])
+    children = data_response.get('children', [])
 
     for post in children:
         title = post.get('data', {}).get('title', '')
@@ -39,7 +39,7 @@ def count_words(subreddit, word_list, new_after='',
                 if key_word == word:
                     words_dict[key_word] = words_dict.get(key_word, 0) + 1
 
-    new_after = response.get('after', None)
+    new_after = data_response.get('after', None)
 
     if new_after is None:
         sorted_dict = sorted(words_dict.items(),
